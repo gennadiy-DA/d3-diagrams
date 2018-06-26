@@ -23,6 +23,7 @@
     "core-js": "^2.5.4",
     "d3": "^3.5.17",
     "d3-hierarchy": "^1.1.6",
+    "d3-sankey": "^0.7.1",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"
   },
@@ -33,6 +34,7 @@
     "@angular/cli": "~6.0.0",
     "@angular/language-service": "^6.0.0",
     "@types/d3": "^3.5.17",
+    "@types/d3-sankey": "^0.7.3",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
