@@ -29,108 +29,111 @@ export class D3v3Example2DndComponent implements OnInit {
     this.format = d => this.formatNumber(d) + ' ' + this.units;
     this.color = d3.scale.category20();
 
-    // append the svg canvas to the page
-    this.svg = d3.select('#chart').append('svg')
-      .attr('width', this.width + this.margin.left + this.margin.right)
-      .attr('height', this.height + this.margin.top + this.margin.bottom)
-      .append('g')
-      .attr('transform',
-        'translate(' + this.margin.left + ',' + this.margin.top + ')');
-
-    // Set the sankey diagram properties
-    this.sankey = d3sankey.sankey()
-      .nodeWidth(36)
-      .nodePadding(10)
-      .size([this.width, this.height]);
-
-    this.path = this.sankey.link();
-
-
-    // load the data
-    d3.json('sankeygreenhouse.json', (error, graph) => {
-      graph.nodes.forEach(x => this.nodeMap[x.name] = x);
-      graph.links = graph.links.map(x => {
-        return {
-          source: this.nodeMap[x.source],
-          target: this.nodeMap[x.target],
-          value: x.value
-        };
-      });
-
-      this.sankey
-        .nodes(graph.nodes)
-        .links(graph.links)
-        .layout(32);
-
-      // add in the links
-      this.link = this.svg.append('g').selectAll('.link')
-        .data(graph.links)
-        .enter().append('path')
-        .attr('class', 'link')
-        .attr('d', this.path)
-        .style('stroke-width', d => Math.max(1, d.dy))
-        .sort((a, b) => b.dy - a.dy);
-
-      // add the link titles
-      this.link.append('title')
-        .text(d => {
-          return d.source.name + ' → ' +
-            d.target.name + '\n' + this.format(d.value); });
-
-// add in the nodes
-      this.node = this.svg.append('g').selectAll('.node')
-        .data(graph.nodes)
-        .enter().append('g')
-        .attr('class', 'node')
-        .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')')
-        .call(d3.behavior.drag()
-          .origin(function(d) { return d; })
-          .on('dragstart', () => parentNode.appendChild(this))
-          .on('drag', dragmove));
-
-      // add the rectangles for the nodes
-      this.node.append('rect')
-        .attr('height', function(d) { return d.dy; })
-        .attr('width', this.sankey.nodeWidth())
-        .style('fill', d => d.color = this.color(d.name.replace(/ .*/, '')))
-        .style('stroke', d => d3.rgb(d.color).darker(2))
-        .append('title')
-        .text(d => d.name + '\n' + this.format(d.value));
-
-      // add in the title for the nodes
-      this.node.append('text')
-        .attr('x', -6)
-        .attr('y', d => d.dy / 2)
-        .attr('dy', '.35em')
-        .attr('text-anchor', 'end')
-        .attr('transform', null)
-        .text(d => d.name)
-        .filter(d => d.x < this.width / 2)
-        .attr('x', 6 + this.sankey.nodeWidth())
-        .attr('text-anchor', 'start');
-
-      // the function for moving the nodes
-      function dragmove(d) {
-        d3.select(this).attr('transform',
-          'translate(' + (
-            d.x = Math.max(0, Math.min(this.width - d.dx, d3.event.x))
-          ) + ',' + (
-            d.y = Math.max(0, Math.min(this.height - d.dy, d3.event.y))
-          ) + ')');
-        this.sankey.relayout();
-        this.link.attr('d', this.path);
-      }
-    });
-
+    // this.firstSolution();
+    // this.secondSolution();
+    this.thirdSolution();
   }
 
 
-  ////////////////////////////////////////////////////////////////////////////
-  // ngOnInit(): void {
-  //   this.DrawChart();
-  // }
+  /////// doesn't work /////////////////////////////////////////////////////////////////////
+  // firstSolution() {
+  //   // append the svg canvas to the page
+  //   this.svg = d3.select('#chart').append('svg')
+  //     .attr('width', this.width + this.margin.left + this.margin.right)
+  //     .attr('height', this.height + this.margin.top + this.margin.bottom)
+  //     .append('g')
+  //     .attr('transform',
+  //       'translate(' + this.margin.left + ',' + this.margin.top + ')');
   //
-  // private DrawChart() {
+  //   // Set the sankey diagram properties
+  //   this.sankey = d3sankey.sankey()
+  //     .nodeWidth(36)
+  //     .nodePadding(10)
+  //     .size([this.width, this.height]);
+  //
+  //   this.path = this.sankey.link();
+  //
+  //
+  //   // load the data
+  //   d3.json('sankeygreenhouse.json', (error, graph: any) => {
+  //     graph.nodes.forEach(x => this.nodeMap[x.name] = x);
+  //     graph.links = graph.links.map(x => {
+  //       return {
+  //         source: this.nodeMap[x.source],
+  //         target: this.nodeMap[x.target],
+  //         value: x.value
+  //       };
+  //     });
+  //
+  //     this.sankey
+  //       .nodes(graph.nodes)
+  //       .links(graph.links)
+  //       .layout(32);
+  //
+  //     // add in the links
+  //     this.link = this.svg.append('g').selectAll('.link')
+  //       .data(graph.links)
+  //       .enter().append('path')
+  //       .attr('class', 'link')
+  //       .attr('d', this.path)
+  //       .style('stroke-width', d => Math.max(1, d.dy))
+  //       .sort((a, b) => b.dy - a.dy);
+  //
+  //     // add the link titles
+  //     this.link.append('title')
+  //       .text(d => {
+  //         return d.source.name + ' → ' +
+  //           d.target.name + '\n' + this.format(d.value); });
+  //
+  //     // add in the nodes
+  //     this.node = this.svg.append('g').selectAll('.node')
+  //       .data(graph.nodes)
+  //       .enter().append('g')
+  //       .attr('class', 'node')
+  //       .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')')
+  //       .call(d3.behavior.drag()
+  //         .origin(function(d) { return d; })
+  //         .on('dragstart', function() {
+  //           this.parentNode.appendChild(this); })
+  //         .on('drag', dragmove));
+  //
+  //     // add the rectangles for the nodes
+  //     this.node.append('rect')
+  //       .attr('height', function(d) { return d.dy; })
+  //       .attr('width', this.sankey.nodeWidth())
+  //       .style('fill', d => d.color = this.color(d.name.replace(/ .*/, '')))
+  //       .style('stroke', d => d3.rgb(d.color).darker(2))
+  //       .append('title')
+  //       .text(d => d.name + '\n' + this.format(d.value));
+  //
+  //     // add in the title for the nodes
+  //     this.node.append('text')
+  //       .attr('x', -6)
+  //       .attr('y', d => d.dy / 2)
+  //       .attr('dy', '.35em')
+  //       .attr('text-anchor', 'end')
+  //       .attr('transform', null)
+  //       .text(d => d.name)
+  //       .filter(d => d.x < this.width / 2)
+  //       .attr('x', 6 + this.sankey.nodeWidth())
+  //       .attr('text-anchor', 'start');
+  //
+  //     // the function for moving the nodes
+  //     function dragmove(d: any) {
+  //       d3.select(this).attr('transform',
+  //         'translate(' + (
+  //           d.x = Math.max(0, Math.min(this.width - d.dx, d3.event.x))
+  //         ) + ',' + (
+  //           d.y = Math.max(0, Math.min(this.height - d.dy, d3.event.y))
+  //         ) + ')');
+  //       this.sankey.relayout();
+  //       this.link.attr('d', this.path);
+  //     }
+  //   });
+  // }
+
+  /////// doesn't work /////////////////////////////////////////////////////////////////////
+  // secondSolution() {
   //
   //   var svg = d3.select('#sankey'),
   //     width = +svg.attr('width'),
@@ -254,6 +257,111 @@ export class D3v3Example2DndComponent implements OnInit {
   //   // });
   // }
 
+
+  /////// TO FINISH /////////////////////////////////////////////////////////////////////
+  thirdSolution() {
+    // from  http://bl.ocks.org/d3noob/5028304
+
+    // append the svg canvas to the page
+    const svg = d3.select('#chart').append('svg')
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom)
+      .append('g')
+      .attr('transform',
+        'translate(' + this.margin.left + ',' + this.margin.top + ')');
+
+    // Set the sankey diagram properties
+    const sankey = d3sankey.sankey()
+      .nodeWidth(36)
+      .nodePadding(10)
+      .size([this.width, this.height]);
+
+    const path = sankey.link();
+
+    // load the data
+    d3.json('../assets/json/example2.json', function(error, graph) {
+
+      const nodeMap = {};
+      graph.nodes.forEach(function(x) { nodeMap[x.name] = x; });
+      graph.links = graph.links.map(function(x) {
+        return {
+          source: nodeMap[x.source],
+          target: nodeMap[x.target],
+          value: x.value
+        };
+      });
+
+      sankey
+        .nodes(graph.nodes)
+        .links(graph.links)
+        .layout(32);
+
+      // add in the links
+      const link = svg.append('g').selectAll('.link')
+        .data(graph.links)
+        .enter().append('path')
+        .attr('class', 'link')
+        .attr('d', path)
+        .style('stroke-width', function(d) { return Math.max(1, d.dy); })
+        .sort(function(a, b) { return b.dy - a.dy; });
+
+      // add the link titles
+      link.append('title')
+        .text(function(d) {
+          return d.source.name + ' → ' +
+            d.target.name + '\n' + this.format(d.value); });
+
+      // add in the nodes
+      const node = svg.append('g').selectAll('.node')
+        .data(graph.nodes)
+        .enter().append('g')
+        .attr('class', 'node')
+        .attr('transform', function(d) {
+          return 'translate(' + d.x + ',' + d.y + ')'; })
+        .call(d3.behavior.drag()
+          .origin(function(d) { return d; })
+          .on('dragstart', function() {
+            this.parentNode.appendChild(this); })
+          .on('drag', dragmove));
+
+      // add the rectangles for the nodes
+      node.append('rect')
+        .attr('height', function(d) { return d.dy; })
+        .attr('width', sankey.nodeWidth())
+        .style('fill', function(d) {
+          return d.color = this.color(d.name.replace(/ .*/, '')); })
+        .style('stroke', function(d) {
+          return d3.rgb(d.color).darker(2); })
+        .append('title')
+        .text(function(d) {
+          return d.name + '\n' + this.format(d.value); });
+
+      // add in the title for the nodes
+      node.append('text')
+        .attr('x', -6)
+        .attr('y', function(d) { return d.dy / 2; })
+        .attr('dy', '.35em')
+        .attr('text-anchor', 'end')
+        .attr('transform', null)
+        .text(function(d) { return d.name; })
+        .filter(function(d) { return d.x < this.width / 2; })
+        .attr('x', 6 + sankey.nodeWidth())
+        .attr('text-anchor', 'start');
+
+      // the function for moving the nodes
+      function dragmove(d) {
+        d3.select(this).attr('transform',
+          'translate(' + (
+            d.x = Math.max(0, Math.min(this.width - d.dx, d3.event.x))
+          ) + ',' + (
+            d.y = Math.max(0, Math.min(this.height - d.dy, d3.event.y))
+          ) + ')');
+        sankey.relayout();
+        link.attr('d', path);
+      }
+    });
+
+  }
 
 
 }

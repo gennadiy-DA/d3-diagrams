@@ -22,7 +22,7 @@ export class D3v3Example2Component implements OnInit {
 
 
   ngOnInit() {
-    this.width = 1500 - this.margin.left - this.margin.right;
+    this.width = 1200 - this.margin.left - this.margin.right;
     this.height = 680 - this.margin.top - this.margin.bottom;
     this.formatNumber = d3.format(',.0f');    // zero decimal places
     this.format = d => this.formatNumber(d) + ' ' + this.units;
