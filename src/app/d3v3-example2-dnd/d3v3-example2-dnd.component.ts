@@ -328,7 +328,8 @@ export class D3v3Example2DndComponent implements OnInit {
       node.append('rect')
         .attr('height', (d: any) => d.dy)
         .attr('width', this.sankey.nodeWidth())
-        .style('fill', (d: any) => d.color = this.color(d.name.replace(/ .*/, '')))
+        .style('fill', function(d: any) {
+          return d.color = this.color(d.name.replace(/ .*/, '')); })
         .style('stroke', (d: any) => d3.rgb(d.color).darker(2))
         .append('title')
         .text(d => d.name + '\n' + this.format(d.value));
