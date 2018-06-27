@@ -34,7 +34,6 @@
     "@angular/cli": "~6.0.0",
     "@angular/language-service": "^6.0.0",
     "@types/d3": "^3.5.17",
-    "@types/d3-sankey": "^0.7.1",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
