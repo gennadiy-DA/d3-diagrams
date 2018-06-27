@@ -67,6 +67,8 @@ export class D3v3Example2Component implements OnInit {
         'MediaOwner3': '#00FF00',
         'MediaOwner4': '#00FF00',
       };
+
+      console.dir(this.sankey);
       this.sankey
         .nodes(graph.nodes)
         .links(graph.links)
@@ -78,7 +80,7 @@ export class D3v3Example2Component implements OnInit {
         .enter().append('path')
         .attr('class', 'link')
         .attr('d', this.path)
-        .style('stroke-width', d => Math.max(1, d.dy))
+        .style('stroke-width', function(d) { return Math.max(1, d.dy); })
         .sort((a, b) => b.dy - a.dy);
 
       // add the link titles
@@ -123,7 +125,7 @@ export class D3v3Example2Component implements OnInit {
       function dragmove(d: any) {
         d3.select(this).attr('transform',
           'translate(' + d.x + ',' + (
-            d.y = Math.max(0, Math.min(this.height - d.dy, d3.event.y))
+            d.y = Math.max(0, Math.min(this.height - d.dy, (<any>d3.event).y))
           ) + ')');
         this.sankey.relayout();
         link.attr('d', this.path);
