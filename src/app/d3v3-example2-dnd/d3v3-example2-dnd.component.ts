@@ -271,19 +271,19 @@ export class D3v3Example2DndComponent implements OnInit {
         'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
     // Set the sankey diagram properties
-    const sankey = d3sankey.sankey()
+    this.sankey = d3sankey.sankey()
       .nodeWidth(36)
       .nodePadding(10)
       .size([this.width, this.height]);
 
-    const path = sankey.link();
+    this.path = this.sankey.link;
 
     // load the data
-    d3.json('../assets/json/example2.json', function(error, graph) {
+    d3.json('../assets/json/example2.json', (error, graph) => {
 
       const nodeMap = {};
       graph.nodes.forEach(function(x) { nodeMap[x.name] = x; });
-      graph.links = graph.links.map(function(x) {
+      graph.links = graph.links.map((x) => {
         return {
           source: nodeMap[x.source],
           target: nodeMap[x.target],
@@ -291,23 +291,24 @@ export class D3v3Example2DndComponent implements OnInit {
         };
       });
 
-      sankey
+      console.dir(this.sankey);
+      this.sankey
         .nodes(graph.nodes)
         .links(graph.links)
         .layout(32);
 
       // add in the links
-      const link = svg.append('g').selectAll('.link')
+      this.link = svg.append('g').selectAll('.link')
         .data(graph.links)
         .enter().append('path')
         .attr('class', 'link')
-        .attr('d', path)
-        .style('stroke-width', function(d) { return Math.max(1, d.dy); })
-        .sort(function(a, b) { return b.dy - a.dy; });
+        .attr('d', this.path)
+        .style('stroke-width', (d: any) => Math.max(1, d.dy))
+        .sort((a: any, b: any) => b.dy - a.dy);
 
       // add the link titles
-      link.append('title')
-        .text(function(d) {
+      this.link.append('title')
+        .text(d => {
           return d.source.name + ' → ' +
             d.target.name + '\n' + this.format(d.value); });
 
@@ -316,48 +317,44 @@ export class D3v3Example2DndComponent implements OnInit {
         .data(graph.nodes)
         .enter().append('g')
         .attr('class', 'node')
-        .attr('transform', function(d) {
-          return 'translate(' + d.x + ',' + d.y + ')'; })
+        .attr('transform', (d: any) => 'translate(' + d.x + ',' + d.y + ')')
         .call(d3.behavior.drag()
-          .origin(function(d) { return d; })
+          .origin(function(d: any) { return d; })
           .on('dragstart', function() {
             this.parentNode.appendChild(this); })
           .on('drag', dragmove));
 
       // add the rectangles for the nodes
       node.append('rect')
-        .attr('height', function(d) { return d.dy; })
-        .attr('width', sankey.nodeWidth())
-        .style('fill', function(d) {
-          return d.color = this.color(d.name.replace(/ .*/, '')); })
-        .style('stroke', function(d) {
-          return d3.rgb(d.color).darker(2); })
+        .attr('height', (d: any) => d.dy)
+        .attr('width', this.sankey.nodeWidth())
+        .style('fill', (d: any) => d.color = this.color(d.name.replace(/ .*/, '')))
+        .style('stroke', (d: any) => d3.rgb(d.color).darker(2))
         .append('title')
-        .text(function(d) {
-          return d.name + '\n' + this.format(d.value); });
+        .text(d => d.name + '\n' + this.format(d.value));
 
       // add in the title for the nodes
       node.append('text')
         .attr('x', -6)
-        .attr('y', function(d) { return d.dy / 2; })
+        .attr('y', (d: any) => d.dy / 2)
         .attr('dy', '.35em')
         .attr('text-anchor', 'end')
         .attr('transform', null)
-        .text(function(d) { return d.name; })
-        .filter(function(d) { return d.x < this.width / 2; })
-        .attr('x', 6 + sankey.nodeWidth())
+        .text((d: any) => d.name)
+        .filter((d: any) => d.x < this.width / 2)
+        .attr('x', 6 + this.sankey.nodeWidth())
         .attr('text-anchor', 'start');
 
       // the function for moving the nodes
       function dragmove(d) {
         d3.select(this).attr('transform',
           'translate(' + (
-            d.x = Math.max(0, Math.min(this.width - d.dx, d3.event.x))
+            d.x = Math.max(0, Math.min(this.width - d.dx, (<any>d3.event).x))
           ) + ',' + (
-            d.y = Math.max(0, Math.min(this.height - d.dy, d3.event.y))
+            d.y = Math.max(0, Math.min(this.height - d.dy, (<any>d3.event).y))
           ) + ')');
-        sankey.relayout();
-        link.attr('d', path);
+        this.sankey.relayout();
+        this.link.attr('d', this.path);
       }
     });
 
