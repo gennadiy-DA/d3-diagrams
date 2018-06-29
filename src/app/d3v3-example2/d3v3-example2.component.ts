@@ -20,7 +20,7 @@ export class D3v3Example2Component implements OnInit {
     var formatNumber = d3.format(',.0f'),    // zero decimal places
       format = function(d) { return formatNumber(d) + ' ' + units; },
       color = d3.scale.category20();
-
+ 
     // append the svg canvas to the page
     var svg = d3.select('#chart').append('svg')
       .attr('width', width + margin.left + margin.right)
